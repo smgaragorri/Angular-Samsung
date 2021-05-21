@@ -43,7 +43,6 @@ export class PersonComponent implements OnInit {
         'dd/MM/yyyy'
       );
       this.contacts.push(this.contact);
-
     } else {
       this.contact.birthday = this.datePipe.transform(
         this.contact.birthday,
