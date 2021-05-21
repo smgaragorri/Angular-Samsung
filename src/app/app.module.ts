@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import {DatePipe} from '@angular/common';
 
 import { AppComponent } from './app.component';
 
@@ -19,7 +20,7 @@ import { PersonComponent } from './persons/person/person.component';
     MaterialModule,
     ReactiveFormsModule,
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

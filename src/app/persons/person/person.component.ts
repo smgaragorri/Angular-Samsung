@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm, FormControl, Validators } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 import { Person } from './../../interfaces/person';
 
@@ -9,8 +10,12 @@ import { Person } from './../../interfaces/person';
   styleUrls: ['./person.component.css'],
 })
 export class PersonComponent implements OnInit {
-  genderList = [{ id:1 , value:'Hombre'}, { id:2 , value:'Mujer'}, { id:3 , value:'No especificado'}, { id:4 , value:'Otro'}];
-  genderControl = new FormControl('', [Validators.required]);
+  genderList = [
+    { id: 1, value: 'Hombre' },
+    { id: 2, value: 'Mujer' },
+    { id: 3, value: 'No especificado' },
+    { id: 4, value: 'Otro' },
+  ];
 
   do: String = 'insert';
   position: any = 0;
@@ -28,47 +33,35 @@ export class PersonComponent implements OnInit {
     notes: '',
   };
 
-  favouriteColours = [
-    { id: 1, value: 'Rosa' },
-    { id: 2, value: 'Azul' },
-    { id: 3, value: 'Negro' },
-    { id: 4, value: 'Naranja' },
-    { id: 5, value: 'Verde' },
-    { id: 6, value: 'Lila' },
-    { id: 7, value: 'Rojo' },
-    { id: 8, value: 'Amarillo' },
-  ];
-
-  constructor() {}
+  constructor(private datePipe: DatePipe) {}
 
   ngOnInit(): void {}
   add(form: NgForm) {
     if (this.do === 'insert') {
-      let birthDate = new Date(this.contact.birthday);
-      let day = birthDate.getDay();
-      let month = birthDate.getMonth();
-      let year = birthDate.getFullYear();
-      let ageNum = parseInt(this.contact.age);
-  
-      this.contact.birthday = `${day}/${month}/${year}`;
-      if (ageNum > 0 && ageNum <= 125) {
-        this.contacts.push(this.contact);
-      }
+      this.contact.birthday = this.datePipe.transform(
+        this.contact.birthday,
+        'dd/MM/yyyy'
+      );
+      this.contacts.push(this.contact);
 
-      this.contact = {
-        name: '',
-        surname: '',
-        age: '',
-        dni: '',
-        birthday: new Date(),
-        favouriteColour: '',
-        gender: '',
-        notes: '',
-      };
     } else {
+      this.contact.birthday = this.datePipe.transform(
+        this.contact.birthday,
+        'dd/MM/yyyy'
+      );
       this.contacts[this.position] = this.contact;
       this.do = 'insert';
     }
+    this.contact = {
+      name: '',
+      surname: '',
+      age: '',
+      dni: '',
+      birthday: '',
+      favouriteColour: '',
+      gender: '',
+      notes: '',
+    };
     form.resetForm();
   }
 
@@ -77,6 +70,12 @@ export class PersonComponent implements OnInit {
   }
   update(upPosition: number): void {
     this.contact = this.contacts[upPosition];
+    var birthDate = this.contact.birthday.split('/');
+    this.contact.birthday = new Date(
+      parseInt(birthDate[2], 10),
+      parseInt(birthDate[1], 10) - 1,
+      parseInt(birthDate[0], 10)
+    );
     this.do = 'update';
     this.position = upPosition;
   }
